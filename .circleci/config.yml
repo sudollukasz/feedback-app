@@ -1,12 +1,7 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
-  build:
+  deploy-job:
     docker:
-
       - image: circleci/node:8.9.3
 
     working_directory: ~/repo
@@ -18,16 +13,11 @@ jobs:
             - "f4:54:b5:bd:97:25:f7:38:ca:f1:61:c1:2e:9a:0a:9b"
       
       -run:
-        name: Install server dependencies
-        command: npm install
-
-      -run:
-        name: Install client dependencies
-        command: npm install --prefix client
-
-      -run:
-        name: Build client
-        command: npm run build --prefix client 
+        name: NPM instal and build
+        command:  | 
+        npm install
+        npm install --prefix client
+        npm run build --prefix client
 
       - run:
           name: Run Setup Script
@@ -35,19 +25,20 @@ jobs:
           
       - run:
           name: Deploy Master to Heroku
-          command:
+          command: | 
             heroku git:remote -a HEROKU_APP_NAME
             git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master
             heroku run python manage.py deploy
             heroku restart
+            
 workflows:
   version: 2
   build-deploy:
     jobs:
-      - build
+      - build-job
       - deploy-jobs:  # only deploy when master successfully builds
           requires:
-            - build
+            - build-job
           filters:
             branches:
               only: master
