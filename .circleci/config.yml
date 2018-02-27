@@ -17,3 +17,18 @@ jobs:
     run: npm install --prefix client
     run: npm run build --prefix client
 
+      - add_ssh_keys: 
+          fingerprints:
+            - "f4:54:b5:bd:97:25:f7:38:ca:f1:61:c1:2e:9a:0a:9b"
+      
+      - run:
+          name: Run Setup Script
+          command: bash .circleci/setup-heroku.sh
+          
+      - run:
+          name: Deploy Master to Heroku
+          command:
+            heroku git:remote -a HEROKU_APP_NAME
+            git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master
+            heroku run python manage.py deploy
+            heroku restart
