@@ -7,8 +7,7 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm install --prefix client
-      - run: npm run build --prefix client
+      - run: npm run heroku-postbuild
 
   deploy:
     machine:
