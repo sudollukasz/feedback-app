@@ -11,10 +11,10 @@ jobs:
       - run: npm run build --prefix client
 
   deployment:
-  staging:
-    branch: master
-    heroku:
-      appname: whispering-dawn-16868
+    production:
+      branch: master
+      heroku:
+        appname: whispering-dawn-16868
 
 workflows:
   version: 2
