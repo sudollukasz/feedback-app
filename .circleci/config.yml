@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run: npm install
       - run: NODE_ENV=development npm install --prefix client 
-      - run: npm run build --prefix client
+      - run: CI=false npm run build --prefix client
 
   deploy:
     machine:
