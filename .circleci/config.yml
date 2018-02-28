@@ -10,20 +10,31 @@ jobs:
       - run: NODE_ENV=development npm install --prefix client 
       - run: npm run build --prefix client
 
-  deployment:
-    production:
-      branch: master
-      heroku:
-        appname: whispering-dawn-16868
-      steps:
+  deploy:
+    machine:
+        enabled: true
+    steps:
       - checkout
+      - add_ssh_keys: 
+          fingerprints:
+            - "f4:54:b5:bd:97:25:f7:38:ca:f1:61:c1:2e:9a:0a:9b"
+      - run:
+          name: Run Setup Script
+          command: bash .circleci/setup-heroku.sh  
+      - run:
+          name: Deploy Master to Heroku
+          command: | 
+            heroku git:remote -a whispering-dawn-16868
+            git push --force git@heroku.com:whispering-dawn-16868.git HEAD:refs/heads/master
+            heroku run python manage.py deploy
+            heroku restart
 
 workflows:
   version: 2
   build_and_deploy:
     jobs:
       - build
-      - deployment:
+      - deploy:
           requires:
             - build
           filters:
