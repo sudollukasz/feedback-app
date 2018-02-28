@@ -25,9 +25,7 @@ jobs:
           name: Deploy Master to Heroku
           command: | 
             heroku git:remote -a whispering-dawn-16868
-            git push --force git@heroku.com:whispering-dawn-16868.git HEAD:refs/heads/master
-            heroku run python manage.py deploy
-            heroku restart
+            git push --force git@heroku.com:whispering-dawn-16868.git HEAD:master
 
 workflows:
   version: 2
